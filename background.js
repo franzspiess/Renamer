@@ -1,3 +1,4 @@
+
 chrome.runtime.onInstalled.addListener(function () {
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
     chrome.declarativeContent.onPageChanged.addRules([{
@@ -10,16 +11,29 @@ chrome.runtime.onInstalled.addListener(function () {
   });
 });
 
-chrome.runtime.onMessage.addListener(
-  
-  function(message, sender, sendResponse) {
-    console.log(message)
-    if (message == 'CLICK'){
-      chrome.tabs.executeScript({
-        file: 'findAndReplaceDOMText.js'
-      }, (result) => {
-        chrome.tabs.executeScript({file: 'content.js'})
-      });
+chrome.tabs.onUpdated.addListener(id => {
+  chrome.tabs.query({
+    status:'complete'
+  }, (tabs) => {
+    const tab = tabs.find(el => el.id === id)
+    if (urlCheck(tab)) {
+      chrome.tabs.executeScript(id, {
+        file: 'content.js'
+      })
     }
-    sendResponse('RECEIVED')
- });
+  }
+  )
+})
+
+
+
+function urlCheck(tab) {
+  if (
+      tab &&   
+      tab.url &&
+      tab.url.indexOf('http') !== -1 &&
+      tab.url.indexOf('mail.') === -1
+    ) return true
+  return false
+}
+
