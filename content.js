@@ -9,7 +9,7 @@
 
 //   })
 // })
-$(document).ready(()=> {
+$(document).ready(() => {
     console.log('AAAAA')
     // document.body.innerText.replace('Trump', 'Crybaby')
     // const html = document.body
@@ -24,7 +24,7 @@ $(document).ready(()=> {
         Johnson: 'Pathetic Clown',
         Mnuchin: 'John Oliver Impersonator',
         Pelosi: 'Geriatric Wonderwoman',
-        Schumer:'Old Man Who Is Lost',
+        Schumer: 'Old Man Who Is Lost',
         Obama: 'God',
         Fauci: 'Knows It All',
     }
@@ -33,28 +33,28 @@ $(document).ready(()=> {
     // var all = [...document.getElementsByTagName("p"), ...document.getElementsByTagName("a"),...document.getElementsByTagName("span"),...document.getElementsByTagName("h*")]
     // const all = document.querySelectorAll("h1, h2, h3, h4, h5, h6, p, span, th, tr, li")
     // console.log(all)
-    let trumpArr = []
+    // let trumpArr = []
 
-    for (var i = 0, max = all.length; i < max; i++) {
+    // for (var i = 0, max = all.length; i < max; i++) {
 
-        let text = all[i].innerText
-        if (text &&
-            Object.keys(replacements).some(value => text.indexOf(value) !== -1) &&
-            text.indexOf('{') === -1) {
-            trumpArr.push(all[i])
-        }
-    }
-    console.log(trumpArr)
+    //     let text = all[i].innerText
+    //     if (text &&
+    //         Object.keys(replacements).some(value => text.indexOf(value) !== -1) &&
+    //         text.indexOf('{') === -1) {
+    //         trumpArr.push(all[i])
+    //     }
+    // }
+    // console.log(trumpArr)
     // for (var i = 0, max = trumpArr.length; i < max; i++) {
-        replaceTextNodes(document.querySelector('body'))
+    replaceTextNodes(document.querySelector('body'))
 
-        // console.log(trumpArr[i], 'BEFORE')
-        // trumpArr[i].innerText = trumpArr[i].innerText.replace(new RegExp('Cuomo','g'), replacements['Cuomo'])
-        // trumpArr[i].textContent = Object.keys(replacements).reduce((acc, key) => {
-        //     console.log(acc, key)
-        //     return acc.replace(new RegExp(key, 'g'), replacements[key])
+    // console.log(trumpArr[i], 'BEFORE')
+    // trumpArr[i].innerText = trumpArr[i].innerText.replace(new RegExp('Cuomo','g'), replacements['Cuomo'])
+    // trumpArr[i].textContent = Object.keys(replacements).reduce((acc, key) => {
+    //     console.log(acc, key)
+    //     return acc.replace(new RegExp(key, 'g'), replacements[key])
 
-        // }, trumpArr[i].textContent)
+    // }, trumpArr[i].textContent)
     // }
 
 
@@ -62,10 +62,14 @@ $(document).ready(()=> {
         el.childNodes.forEach((node) => {
             if (node.nodeType === 3) {
                 // Text node:
-                node.textContent = Object.keys(replacements).reduce((acc, key) => {
+                const oldText = node.textContent
+                const newText = Object.keys(replacements).reduce((acc, key) => {
                     console.log(acc, key)
                     return acc.replace(new RegExp(key, 'g'), replacements[key])
-                }, node.textContent)
+                }, oldText)
+                if (newText !== oldText) {
+                    node.textContent = newText
+                }
             } else if (node.nodeType === 1) {
                 // Element node, recurse:
                 replaceTextNodes(node);
