@@ -9,55 +9,13 @@
 
 //   })
 // })
-$(document).ready(() => {
-    console.log('AAAAA')
+$(document).ready(async () => {
+
     // document.body.innerText.replace('Trump', 'Crybaby')
     // const html = document.body
     // document.body = document.body.replace('Trump', 'Crybaby')
-    const replacements = {
-        Trump: 'Whiny Little Bitch',
-        Pence: 'SecretlyGay',
-        Newsom: 'McDreamy',
-        Cuomo: 'Beefcake',
-        Biden: 'Happy Grandpa',
-        McConnell: 'Evil Turtle',
-        Johnson: 'Pathetic Clown',
-        Mnuchin: 'John Oliver Impersonator',
-        Pelosi: 'Geriatric Wonderwoman',
-        Schumer: 'Old Man Who Is Lost',
-        Obama: 'God',
-        Fauci: 'Knows It All',
-    }
-
-
-    // var all = [...document.getElementsByTagName("p"), ...document.getElementsByTagName("a"),...document.getElementsByTagName("span"),...document.getElementsByTagName("h*")]
-    // const all = document.querySelectorAll("h1, h2, h3, h4, h5, h6, p, span, th, tr, li")
-    // console.log(all)
-    // let trumpArr = []
-
-    // for (var i = 0, max = all.length; i < max; i++) {
-
-    //     let text = all[i].innerText
-    //     if (text &&
-    //         Object.keys(replacements).some(value => text.indexOf(value) !== -1) &&
-    //         text.indexOf('{') === -1) {
-    //         trumpArr.push(all[i])
-    //     }
-    // }
-    // console.log(trumpArr)
-    // for (var i = 0, max = trumpArr.length; i < max; i++) {
+    const replacements = await getStoragePromise()
     replaceTextNodes(document.querySelector('body'))
-
-    // console.log(trumpArr[i], 'BEFORE')
-    // trumpArr[i].innerText = trumpArr[i].innerText.replace(new RegExp('Cuomo','g'), replacements['Cuomo'])
-    // trumpArr[i].textContent = Object.keys(replacements).reduce((acc, key) => {
-    //     console.log(acc, key)
-    //     return acc.replace(new RegExp(key, 'g'), replacements[key])
-
-    // }, trumpArr[i].textContent)
-    // }
-
-
     function replaceTextNodes(el) {
         el.childNodes.forEach((node) => {
             if (node.nodeType === 3) {
@@ -75,16 +33,56 @@ $(document).ready(() => {
                 replaceTextNodes(node);
             }
         });
+       
+
+    // var all = [...document.getElementsByTagName("p"), ...document.getElementsByTagName("a"),...document.getElementsByTagName("span"),...document.getElementsByTagName("h*")]
+    // const all = document.querySelectorAll("h1, h2, h3, h4, h5, h6, p, span, th, tr, li")
+    // console.log(all)
+    // let trumpArr = []
+
+    // for (var i = 0, max = all.length; i < max; i++) {
+
+    //     let text = all[i].innerText
+    //     if (text &&
+    //         Object.keys(replacements).some(value => text.indexOf(value) !== -1) &&
+    //         text.indexOf('{') === -1) {
+    //         trumpArr.push(all[i])
+    //     }
+    // }
+    // console.log(trumpArr)
+    // for (var i = 0, max = trumpArr.length; i < max; i++) {
+    
+
+    // console.log(trumpArr[i], 'BEFORE')
+    // trumpArr[i].innerText = trumpArr[i].innerText.replace(new RegExp('Cuomo','g'), replacements['Cuomo'])
+    // trumpArr[i].textContent = Object.keys(replacements).reduce((acc, key) => {
+    //     console.log(acc, key)
+    //     return acc.replace(new RegExp(key, 'g'), replacements[key])
+
+    // }, trumpArr[i].textContent)
+    // }
 
 
-        // console.log(trumpArr[i].innerText, 'AFTER')
-        // findAndReplaceDOMText(trumpArr[i], {
-        //     find: '/Trump/',
-        //     replace: 'Crybaby'
-        // })
-    }
+    
 
+}
+
+
+
+    // console.log(trumpArr[i].innerText, 'AFTER')
+    // findAndReplaceDOMText(trumpArr[i], {
+    //     find: '/Trump/',
+    //     replace: 'Crybaby'
+    // })
 })
+
+function getStoragePromise() {
+    return new Promise((res) => {
+        chrome.storage.local.get(['replacements'], ({ replacements }) => {
+            res(replacements)
+        })
+    })
+  }
 
 
 // (function () {})() IIFE

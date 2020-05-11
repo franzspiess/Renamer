@@ -1,40 +1,44 @@
 $(document).ready(() => {
-    const replacements = {
-        Trump: 'Whiny Little Bitch',
-        Pence: 'SecretlyGay',
-        Newsom: 'McDreamy',
-        Cuomo: 'Beefcake',
-        Biden: 'Happy Grandpa',
-        McConnell: 'Evil Turtle',
-        Johnson: 'Pathetic Clown',
-        Mnuchin: 'John Oliver Impersonator',
-        Pelosi: 'Geriatric Wonderwoman',
-        Schumer: 'Old Man Who Is Lost',
-        Obama: 'God',
-        Fauci: 'Knows It All',
-    }
-
     const form = $('#myForm')
+    const inputContainer =$('#inputContainer')
 
-    Object.keys(replacements).forEach((key, i) => {
-        console.log(key, i)
+    getStoragePromise()
+        .then(replacements => {
+            Object.keys(replacements).forEach((key, i) => {
+                const field = `<div class='row'>
+                                <input id='key-${i}' name='${key}' value='${key}'>
+                                <label>---></label>
+                                <input id='value-${i}' name='${key} 'value='${replacements[key]}'>
+                            </div>`
+                inputContainer.append(field)
+            })
+            form.append(`<input type='submit' id='submitButton' />`)
+        })
+
+    form.submit((e) => {
+        const newTranslation = form.serializeArray().reduce((acc, el, i, arr) => {
+
+            if (i % 2 === 0) {
+                acc[el.value] = arr[i + 1].value
+            }
+            return acc
+        }, {})
+        setStorage(newTranslation)
+        e.preventDefault()
+    })
+
+    $('#addBtn').click(() => {
+        console.log('clicked')
         const field = `<div class='row'>
-                        <input id='key-${i}' value='${key}'>
-                        <input id='value-${i}' value='${replacements[key]}'>
-                    </div>`
-        console.log(form)
+                                <input  name='TEST' value=''>
+                                <label>---></label>
+                                <input name='TEST' 'value=''>
+                            </div>`
         console.log(field)
-        form.append(field)
+        inputContainer.append(field)
     })
-
-    form.append(`<input type='submit' id='submitButton' />`)
-
-    $('submitButton').click((e) => {
-        (function clickHandler(e) {
-            e.preventDefault()
-            console.log(arguments)
-        })()
-    })
-
-
+    console.log(form)
+    console.log($('#addBtn'))
 })
+
+
