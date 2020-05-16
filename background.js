@@ -28,20 +28,36 @@ chrome.runtime.onInstalled.addListener(function () {
       actions: [new chrome.declarativeContent.ShowPageAction()]
     }]);
   });
+
 });
 
 function getStoragePromise() {
   return new Promise((res) => {
-      chrome.storage.local.get(['replacements'], ({ replacements }) => {
-          res(replacements)
-      })
+    chrome.storage.local.get(['replacements'], ({ replacements }) => {
+      res(replacements)
+    })
   })
 }
 
-function setStorage(storageObj) {
-  chrome.storage.local.set({replacements:storageObj}, () => {
-      console.log('SET STORAGE:', JSON.stringify(storageObj))
+function setStorage(storageObj, cb) {
+  chrome.storage.local.set({ replacements: storageObj }, () => {
+    cb(arguments)
   })
+}
+
+function logger(args) {
+  console.log('SET STORAGE:', JSON.stringify(args[0]))
+}
+
+function addInputs(node, empty = false) {
+  empty && node.empty()
+  const field = `<div class='row'>
+<input  name='TEST' value=''><br/>
+<span>TRANSLATES TO</span>
+<input name='TEST' 'value=''><br/>
+<input type='submit'>ADD TRANSLATION</button>
+</div>`
+  node.append(field)
 }
 
 // chrome.tabs.onUpdated.addListener(id => {
