@@ -1,0 +1,21 @@
+{
+  "name": "Renamer",
+  "version": "0.0.1",
+  "description": "Replace your strings!",
+  "permissions": ["declarativeContent","tabs","storage"],
+  "background": {
+    "scripts": ["jquery-3.4.1.min.js","background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*","https://*/*"],
+      "js": ["jquery-3.4.1.min.js","content.js" ]
+    }
+  ],
+  "page_action": {
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "manifest_version": 2
+}
