@@ -6,13 +6,17 @@
   <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
 </head>
 
-<body>
-  <div class="myClass" id="container">
-    <form id="myForm">
-      
-    </form>
-    <button id='go-to-options'>GO TO OPTIONS</button>
+<body class="myClass">
+  <div class="level" id="container">
+    <button id='go-to-options' class="button">GO TO OPTIONS</button>
   </div>
+  <div>
+    <label>
+      <input type="checkbox" id="keepGroupOpen" />
+      <span>TRANSLATE DOMAIN</span>
+    </label>
+  </div>
+ 
 </body>
 <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
 <script type="text/javascript" src="background.js"></script>

@@ -1,19 +1,10 @@
 
 chrome.runtime.onInstalled.addListener(function () {
   chrome.storage.local.set({
+    domain:'',
+    domains: [],
     replacements: {
-      Trump: 'Whiny Little Bitch',
-      Pence: 'SecretlyGay',
-      Newsom: 'McDreamy',
-      Cuomo: 'Beefcake',
-      Biden: 'Happy Grandpa',
-      McConnell: 'Evil Turtle',
-      Johnson: 'Pathetic Clown',
-      Mnuchin: 'John Oliver Impersonator',
-      Pelosi: 'Geriatric Wonderwoman',
-      Schumer: 'Old Man Who Is Lost',
-      Obama: 'God',
-      Fauci: 'Knows It All',
+     
     }
   }, () => {
     console.log('SET REPLACEMENTS ON INSTALL')
@@ -30,6 +21,49 @@ chrome.runtime.onInstalled.addListener(function () {
   });
 
 });
+
+
+chrome.tabs.onActivated.addListener((info) => {
+  chrome.windows.getCurrent({ populate: true }, (window) => {
+      new Promise(res => {
+        res(getDomain(window.tabs.filter(tab => tab.active)[0].url))
+      }).then((domain) => {
+        setValuesInStorage({
+          domain
+        })
+      })
+  })
+})
+
+chrome.runtime.onMessage.addListener(
+  (request, _, sendResponse) => {
+    if (request.keepGroupOpen) {
+      keepOpenClick('domains')
+    }
+    sendResponse('RECEIVED')
+  });
+
+  function keepOpenClick(key) {
+    new Promise(res => {
+      chrome.storage.local.get([key, 'domain'], (storage) => {
+        const { domain } = storage
+        const tabArray = storage[key]
+        let resultArray = []
+  
+        if (tabArray.includes(domain)) {
+          resultArray = [...tabArray.filter(tab => tab !== domain)]
+        } else {
+          resultArray = [...tabArray]
+          if (domain !== 'noStandardUrl') {
+            resultArray.push(domain)
+          }
+        }
+        res(resultArray)
+      })
+    }).then(result => {
+      setValuesInStorage({ [key]: result })
+    })
+  }
 
 function getStoragePromise() {
   return new Promise((res) => {
@@ -58,6 +92,11 @@ function addInputs(node, empty = false) {
 <input type='submit'>ADD TRANSLATION</button>
 </div>`
   node.append(field)
+}
+function setValuesInStorage(setterObj) {
+  chrome.storage.local.set(setterObj, () => {
+    console.log('SET STORAGE IN ACTIVE TAB')
+  })
 }
 
 // chrome.tabs.onUpdated.addListener(id => {
@@ -99,3 +138,23 @@ function addInputs(node, empty = false) {
 //   return false
 // }
 
+// {Trump: 'Whiny Little Bitch',
+//       Pence: 'SecretlyGay',
+//       Newsom: 'McDreamy',
+//       Cuomo: 'Beefcake',
+//       Biden: 'Happy Grandpa',
+//       McConnell: 'Evil Turtle',
+//       Johnson: 'Pathetic Clown',
+//       Mnuchin: 'John Oliver Impersonator',
+//       Pelosi: 'Geriatric Wonderwoman',
+//       Schumer: 'Old Man Who Is Lost',
+//       Obama: 'God',
+//       Fauci: 'Knows It All',}
+
+function getDomain(url) {
+  if (url) {
+    const domainRegex = url.match(/^(?:.*:\/\/)?(?:.*?\.)?([^:\/]*?\.[^:\/]*).*$/)
+    return domainRegex ? domainRegex[1] : 'noStandardUrl'
+  }
+  return 'noStandardUrl'
+}

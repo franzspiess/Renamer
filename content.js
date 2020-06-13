@@ -14,26 +14,34 @@ $(document).ready(async () => {
     // document.body.innerText.replace('Trump', 'Crybaby')
     // const html = document.body
     // document.body = document.body.replace('Trump', 'Crybaby')
-    const replacements = await getStoragePromise()
-    replaceTextNodes(document.querySelector('body'))
-    function replaceTextNodes(el) {
-        el.childNodes.forEach((node) => {
-            if (node.nodeType === 3) {
-                // Text node:
-                const oldText = node.textContent
-                const newText = Object.keys(replacements).reduce((acc, key) => {
-                    console.log(acc, key)
-                    return acc.replace(new RegExp(key, 'g'), replacements[key])
-                }, oldText)
-                if (newText !== oldText) {
-                    node.textContent = newText
+    const {
+        domain,
+        domains,
+        replacements
+    } = await getStoragePromise()
+    if (domains.includes(domain)) {
+        replaceTextNodes(document.querySelector('body'))
+        function replaceTextNodes(el) {
+            el.childNodes.forEach((node) => {
+                if (node.nodeType === 3) {
+                    // Text node:
+                    const oldText = node.textContent
+                    const newText = Object.keys(replacements).reduce((acc, key) => {
+                        console.log(acc, key)
+                        return acc.replace(new RegExp(key, 'g'), replacements[key])
+                    }, oldText)
+                    if (newText !== oldText) {
+                        node.textContent = newText
+                    }
+                } else if (node.nodeType === 1) {
+                    // Element node, recurse:
+                    replaceTextNodes(node);
                 }
-            } else if (node.nodeType === 1) {
-                // Element node, recurse:
-                replaceTextNodes(node);
-            }
-        });
-       
+            })
+        }
+    }
+});
+
 
     // var all = [...document.getElementsByTagName("p"), ...document.getElementsByTagName("a"),...document.getElementsByTagName("span"),...document.getElementsByTagName("h*")]
     // const all = document.querySelectorAll("h1, h2, h3, h4, h5, h6, p, span, th, tr, li")
@@ -51,7 +59,7 @@ $(document).ready(async () => {
     // }
     // console.log(trumpArr)
     // for (var i = 0, max = trumpArr.length; i < max; i++) {
-    
+
 
     // console.log(trumpArr[i], 'BEFORE')
     // trumpArr[i].innerText = trumpArr[i].innerText.replace(new RegExp('Cuomo','g'), replacements['Cuomo'])
@@ -62,27 +70,20 @@ $(document).ready(async () => {
     // }, trumpArr[i].textContent)
     // }
 
-
-    
-
-}
-
-
-
     // console.log(trumpArr[i].innerText, 'AFTER')
     // findAndReplaceDOMText(trumpArr[i], {
     //     find: '/Trump/',
     //     replace: 'Crybaby'
     // })
-})
+
 
 function getStoragePromise() {
     return new Promise((res) => {
-        chrome.storage.local.get(['replacements'], ({ replacements }) => {
-            res(replacements)
+        chrome.storage.local.get(['domain', 'domains', 'replacements'], (response) => {
+            res(response)
         })
     })
-  }
+}
 
 
 // (function () {})() IIFE

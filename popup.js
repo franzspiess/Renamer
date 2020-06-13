@@ -1,16 +1,37 @@
 $(document).ready(() => {
     const myForm = $('#myForm')
     const goToOptionsBtn = $('#go-to-options')
+    const keepGroupOpenInput = $('#keepGroupOpen')
     addInputs(myForm, true)
+    deriveInputState(keepGroupOpenInput)
+    function deriveInputState(node) {
 
-
-    myForm.submit((e) => {
-        const newTranslation = myForm.serializeArray()
-        getStoragePromise()
-            .then(replacements => addToTranslation(newTranslation, replacements))
-            .then(handleForm)
-        e.preventDefault()
+        const id = node.attr('id')
+    
+        if (id === 'keepGroupOpen') {
+            chrome.storage.local.get(['domains', 'domain'], ({domains, domain}) => {
+                console.log(domains, domain)
+                node.prop('checked', domains.includes(domain))
+            })
+        }
+    
+    }
+    keepGroupOpenInput.click(() => {
+        chrome.runtime.sendMessage({
+            keepGroupOpen: 'CLICK'
+        }, (response) => {
+            console.log(response, 'KEEPGROUPOPEN')
+        })
     })
+
+
+    // myForm.submit((e) => {
+    //     const newTranslation = myForm.serializeArray()
+    //     getStoragePromise()
+    //         .then(replacements => addToTranslation(newTranslation, replacements))
+    //         .then(handleForm)
+    //     e.preventDefault()
+    // })
 
     goToOptionsBtn.click(() => {
         if (chrome.runtime.openOptionsPage) {
@@ -20,39 +41,39 @@ $(document).ready(() => {
         }
     })
 
-    function handleForm(string) {
-        switch (string) {
-            case 'SUCCESS':
-                displayMsg(string)
-                setTimeout(addInputs, 5000)
-        }
-    }
+    // function handleForm(string) {
+    //     switch (string) {
+    //         case 'SUCCESS':
+    //             displayMsg(string)
+    //             setTimeout(addInputs, 5000)
+    //     }
+    // }
 
-    function displayMsg(string) {
-        myForm.empty()
-        myForm.append(`<span>${string}</span>`)
-    }
+    // function displayMsg(string) {
+    //     myForm.empty()
+    //     myForm.append(`<span>${string}</span>`)
+    // }
 
     
 
 })
 
-function addToTranslation(newTranslation, replacements) {
-    if (newTranslation.length === 2) {
-        const [nameObj, valueObj] = newTranslation;
-        const name = nameObj.value;
-        const value = valueObj.value;
-        if (!replacements[name]) {
-            setStorage({
-                ...replacements,
-                [name]: value
-            }, logger)
-            return ('SUCCESS')
-        }
-        return ('EXISTS')
-    }
-    return ('FILL_ERROR')
-}
+// function addToTranslation(newTranslation, replacements) {
+//     if (newTranslation.length === 2) {
+//         const [nameObj, valueObj] = newTranslation;
+//         const name = nameObj.value;
+//         const value = valueObj.value;
+//         if (!replacements[name]) {
+//             setStorage({
+//                 ...replacements,
+//                 [name]: value
+//             }, logger)
+//             return ('SUCCESS')
+//         }
+//         return ('EXISTS')
+//     }
+//     return ('FILL_ERROR')
+// }
 
 // getStoragePromise()
 // .then(replacements => {
