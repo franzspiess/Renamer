@@ -3,9 +3,7 @@ chrome.runtime.onInstalled.addListener(function () {
   chrome.storage.local.set({
     domain:'',
     domains: [],
-    replacements: {
-     
-    }
+    replacements: myTranslations || {}
   }, () => {
     console.log('SET REPLACEMENTS ON INSTALL')
   })
@@ -33,6 +31,8 @@ chrome.tabs.onActivated.addListener((info) => {
         })
       })
   })
+
+
 })
 
 chrome.runtime.onMessage.addListener(
@@ -99,58 +99,6 @@ function setValuesInStorage(setterObj) {
   })
 }
 
-// chrome.tabs.onUpdated.addListener(id => {
-//   chrome.tabs.query({
-//     status: 'complete',
-//   }, (tabs) => {
-//     const tab = tabs.find(el => el.id === id)
-//     console.log(tab)
-//     if (urlCheck(tab)) {
-//       chrome.tabs.executeScript(id, {
-//         file: 'content.js'
-//       })
-//     }
-//   }
-//   )
-// })
-
-// chrome.tabs.onActivated.addListener((tab) => {
-//   const { tabId,url } = tab
-//   if (urlCheck(url)) {
-//     chrome.tabs.executeScript(tabId, {
-//       file: 'content.js'
-//     })
-//   }
-// })
-
-
-
-
-
-// function urlCheck(tab) {
-//   if (
-//     tab &&
-//     tab.url &&
-//     tab.url.indexOf('http') !== -1
-//     // &&
-//     // tab.url.indexOf('mail.') === -1
-//   ) return true
-//   return false
-// }
-
-// {Trump: 'Whiny Little Bitch',
-//       Pence: 'SecretlyGay',
-//       Newsom: 'McDreamy',
-//       Cuomo: 'Beefcake',
-//       Biden: 'Happy Grandpa',
-//       McConnell: 'Evil Turtle',
-//       Johnson: 'Pathetic Clown',
-//       Mnuchin: 'John Oliver Impersonator',
-//       Pelosi: 'Geriatric Wonderwoman',
-//       Schumer: 'Old Man Who Is Lost',
-//       Obama: 'God',
-//       Fauci: 'Knows It All',}
-
 function getDomain(url) {
   if (url) {
     const domainRegex = url.match(/^(?:.*:\/\/)?(?:.*?\.)?([^:\/]*?\.[^:\/]*).*$/)
@@ -158,3 +106,18 @@ function getDomain(url) {
   }
   return 'noStandardUrl'
 }
+
+const myTranslations= {
+      Trump: 'Whiny Little Bitch',
+      Pence: 'SecretlyGay',
+      Newsom: 'McDreamy',
+      Cuomo: 'Beefcake',
+      Biden: 'Happy Grandpa',
+      McConnell: 'Evil Turtle',
+      Johnson: 'Pathetic Clown',
+      Mnuchin: 'John Oliver Impersonator',
+      Pelosi: 'Geriatric Wonderwoman',
+      Schumer: 'Old Man Who Is Lost',
+      Obama: 'God',
+      Fauci: 'Knows It All',
+    }

@@ -10,7 +10,6 @@ $(document).ready(() => {
     
         if (id === 'keepGroupOpen') {
             chrome.storage.local.get(['domains', 'domain'], ({domains, domain}) => {
-                console.log(domains, domain)
                 node.prop('checked', domains.includes(domain))
             })
         }
@@ -19,19 +18,13 @@ $(document).ready(() => {
     keepGroupOpenInput.click(() => {
         chrome.runtime.sendMessage({
             keepGroupOpen: 'CLICK'
-        }, (response) => {
-            console.log(response, 'KEEPGROUPOPEN')
+        }, () => {
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
+            });
         })
     })
 
-
-    // myForm.submit((e) => {
-    //     const newTranslation = myForm.serializeArray()
-    //     getStoragePromise()
-    //         .then(replacements => addToTranslation(newTranslation, replacements))
-    //         .then(handleForm)
-    //     e.preventDefault()
-    // })
 
     goToOptionsBtn.click(() => {
         if (chrome.runtime.openOptionsPage) {
@@ -41,58 +34,4 @@ $(document).ready(() => {
         }
     })
 
-    // function handleForm(string) {
-    //     switch (string) {
-    //         case 'SUCCESS':
-    //             displayMsg(string)
-    //             setTimeout(addInputs, 5000)
-    //     }
-    // }
-
-    // function displayMsg(string) {
-    //     myForm.empty()
-    //     myForm.append(`<span>${string}</span>`)
-    // }
-
-    
-
 })
-
-// function addToTranslation(newTranslation, replacements) {
-//     if (newTranslation.length === 2) {
-//         const [nameObj, valueObj] = newTranslation;
-//         const name = nameObj.value;
-//         const value = valueObj.value;
-//         if (!replacements[name]) {
-//             setStorage({
-//                 ...replacements,
-//                 [name]: value
-//             }, logger)
-//             return ('SUCCESS')
-//         }
-//         return ('EXISTS')
-//     }
-//     return ('FILL_ERROR')
-// }
-
-// getStoragePromise()
-// .then(replacements => {
-//     Object.keys(replacements).forEach((key, i) => {
-//         const field = `<div class='row'>
-//                         <input id='key-${i}' name='${key}' value='${key}'>
-//                         <label>---></label>
-//                         <input id='value-${i}' name='${key} 'value='${replacements[key]}'>
-//                     </div>`
-//         inputContainer.append(field)
-//     })
-//     form.append(`<input type='submit' id='submitButton' />`)
-// })
-
-// const newTranslation = form.serializeArray().reduce((acc, el, i, arr) => {
-
-//     if (i % 2 === 0) {
-//         acc[el.value] = arr[i + 1].value
-//     }
-//     return acc
-// }, {})
-// setStorage(newTranslation)

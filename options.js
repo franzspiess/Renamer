@@ -25,7 +25,7 @@ $('document').ready(() => {
 
         form.append(`
         <div id="submit-container" class="level submit">
-        <input class="button" type='submit' id='submitButton' value="SEND"/>
+        <input class="button" type='submit' id='submitButton' value="SAVE"/>
         </div>
         `)
       })
@@ -35,8 +35,10 @@ $('document').ready(() => {
     e.preventDefault()
     const replacements = createTranslations()
     chrome.storage.local.set({replacements}, () => {
-      console.log(replacements)
+      $('#submit-container').empty()
+      $('#submit-container').append('<span>DONE</span>')
     })
+
   })
 
   $('#addBtn').click((e) => {
