@@ -7,12 +7,21 @@
   width: 240px;
   outline: none;
 }
-form {
+.addBtn {
+  position: absolute;
+  top: 45vh;
+  left: 50px;
+}
+/* form {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
+} */
 
+.submit {
+  justify-content: center !important;
+  margin-bottom: 10px;
+}
 .row {
   display: flex;
   flex-direction: row;
@@ -21,18 +30,22 @@ form {
   width: 55%;
   
 }
+.inner {
+  max-width: 50% !important;
+}
+
 .arrow {
   font-size: 24px;
 }
 
-input {
+/* input {
   width: 200px;
   border: 1px black solid;
   margin: 5px 12px;
   padding: 4px;
-}
+} */
 
-.input-container  {
+/* .input-container  {
   display: flex;
   flex-direction: column;
-}
+} */
